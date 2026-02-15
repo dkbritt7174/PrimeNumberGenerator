@@ -51,6 +51,7 @@ def human_time(seconds: float) -> str:
 # --------------------------------------------------------------------------- #
 _cumulative_times = defaultdict(float)
 
+
 def timed(func):
     """
     Decorator that measures how long a function takes to execute and keeps a
@@ -61,8 +62,8 @@ def timed(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        start   = time.perf_counter()
-        result  = func(*args, **kwargs)
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
         elapsed = time.perf_counter() - start
         _cumulative_times[func.__name__] += elapsed
         return result
@@ -100,7 +101,7 @@ def base_sieve(limit: int) -> np.ndarray:
     for p in range(3, sqrt_lim + 1, 2):
         if sieve[p // 2]:
             start_idx = (p * p) // 2
-            step      = p
+            step = p
             sieve[start_idx::step] = False
 
     primes = [2]
@@ -124,7 +125,7 @@ def cpu_worker(args):
         * ``low``  – first odd number of the segment.
         * ``high`` – exclusive upper bound of the segment (inclusive for
           prime testing).
-        * ``base_primes`` – array of all primes ≤ √MAX_N.
+        * ``base_primes`` – array of all primes ≤ √max_n.
 
     Returns
     -------
@@ -134,8 +135,8 @@ def cpu_worker(args):
     """
     low, high, base_primes = args
 
-    seg_size   = high - low
-    seg_sieve  = np.ones(seg_size // 2 + 1, dtype=bool)
+    seg_size = high - low
+    seg_sieve = np.ones(seg_size // 2 + 1, dtype=bool)
 
     for p in base_primes:
         if p * p > high:
@@ -145,9 +146,9 @@ def cpu_worker(args):
         if start % 2 == 0:
             start += p
 
-        seg_sieve[(start - low) // 2 :: p] = False
+        seg_sieve[(start - low) // 2:: p] = False
 
-    odds   = np.nonzero(seg_sieve)[0]
+    odds = np.nonzero(seg_sieve)[0]
     return (low + odds * 2).tolist()
 
 
@@ -158,35 +159,35 @@ def main():
     """
     Orchestrate the prime generation:
 
-    1. Compute base primes up to √MAX_N.
-    2. Split the range [3, MAX_N] into segments.
+    1. Compute base primes up to √max_n.
+    2. Split the range [3, max_n] into segments.
     3. Run each segment in parallel using ``multiprocessing.Pool``.
     4. Merge and sort the results.
     5. Write the primes to a space‑delimited file with 100 numbers per line.
     6. Print timing information for each step.
     7. Pause until the user presses <Enter>.
     """
-    MAX_N      = 1_000_000_000          # inclusive upper bound
-    SEG_SZ     = 10_000_000             # segment size – tweak for memory
+    max_n = 1_000_000_000          # inclusive upper bound
+    seg_sz = 10_000_000             # segment size – tweak for memory
 
-    print(f"=== Prime generator up to {MAX_N:,} ===")
+    print(f"=== Prime generator up to {max_n:,} ===")
     t_start = time.perf_counter()
 
     # ---- 1️⃣ base primes ------------------------------------------- #
-    base_primes = base_sieve(isqrt(MAX_N) + 1)
+    base_primes = base_sieve(isqrt(max_n) + 1)
     print(f"[1] Base primes (≤ √N): {len(base_primes)} found.")
 
     # ---- 2️⃣ create segment ranges ---------------------------------- #
-    ranges = [(l, min(l + SEG_SZ, MAX_N + 1))
-              for l in range(3, MAX_N + 1, SEG_SZ)]
-    print(f"[2] Split into {len(ranges)} segments of size ~{SEG_SZ:,}.")
+    ranges = [(l, min(l + seg_sz, max_n + 1))
+              for l in range(3, max_n + 1, seg_sz)]
+    print(f"[2] Split into {len(ranges)} segments of size ~{seg_sz:,}.")
 
     # ---- 3️⃣ parallel segmented sieve ------------------------------- #
     with Pool(cpu_count()) as pool:
         all_lists = pool.map(cpu_worker,
                              [(l, h, base_primes) for l, h in ranges])
 
-    print(f"[3] Parallel segmented sieve finished.")
+    print("[3] Parallel segmented sieve finished.")
 
     # ---- 4️⃣ combine and sort --------------------------------------- #
     primes_all = [p for sublist in all_lists for p in sublist]
@@ -196,12 +197,13 @@ def main():
 
     # ---- 5️⃣ write to file ------------------------------------------ #
     out_file = "primes.txt"
-    with open(out_file, "w") as f:
+    with open(out_file, "w", encoding='utf-8') as f:
         for i in range(0, total_primes, 100):
             line = " ".join(map(str, primes_all[i:i + 100]))
             f.write(line + "\n")
 
-    print(f"[5] Primes written to ``{out_file}`` (space‑delimited, 100 columns).")
+    print(
+        f"[5] Primes written to ``{out_file}`` (space‑delimited, 100 columns).")
 
     t_elapsed = time.perf_counter() - t_start
     print("\n--- Timing summary ---")
