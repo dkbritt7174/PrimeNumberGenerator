@@ -198,12 +198,12 @@ def main():
     # ---- 5️⃣ write to file ------------------------------------------ #
     out_file = "primes.txt"
     with open(out_file, "w", encoding='utf-8') as f:
-        for i in range(0, total_primes, 100):
-            line = " ".join(map(str, primes_all[i:i + 100]))
+        for i in range(0, total_primes, 25):
+            line = " ".join(map(str, primes_all[i:i + 25]))
             f.write(line + "\n")
 
     print(
-        f"[5] Primes written to ``{out_file}`` (space‑delimited, 100 columns).")
+        f"[5] Primes written to ``{out_file}`` (space‑delimited, 25 columns).")
 
     t_elapsed = time.perf_counter() - t_start
     print("\n--- Timing summary ---")
@@ -219,3 +219,4 @@ def main():
 # --------------------------------------------------------------------------- #
 if __name__ == "__main__":
     main()
+
