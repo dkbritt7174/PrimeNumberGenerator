@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ======================================================= -->
+  <!-- Project configurations                                  -->
+  <!-- ======================================================= -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <!-- ======================================================= -->
+  <!-- Global properties                                       -->
+  <!-- ======================================================= -->
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <RootNamespace>PrimeSieve</RootNamespace>
+    <ProjectName>PrimeSieve</ProjectName>
+    <!-- Target Windows 10 / 11 SDK -->
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- ======================================================= -->
+  <!-- Debug | x64                                             -->
+  <!-- ======================================================= -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <!-- ======================================================= -->
+  <!-- Release | x64                                           -->
+  <!-- ======================================================= -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <!-- ======================================================= -->
+  <!-- Per-configuration property sheets                       -->
+  <!-- ======================================================= -->
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <!-- ======================================================= -->
+  <!-- Debug | x64: compiler & linker settings                 -->
+  <!-- ======================================================= -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <!-- Runtime: Multi-threaded Debug DLL -->
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- ======================================================= -->
+  <!-- Release | x64: aggressive speed optimizations           -->
+  <!-- ======================================================= -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <!-- Speed optimizations -->
+      <Optimization>Full</Optimization>
+      <!-- /O2 -> /Ox -->
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <!-- /Ot -->
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <!-- /Oi: enable intrinsics -->
+      <OmitFramePointers>true</OmitFramePointers>
+      <!-- /Oy -->
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <!-- /arch:AVX2 -->
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <!-- /fp:fast -->
+      <StringPooling>true</StringPooling>
+      <!-- /GF -->
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <!-- /Gy: for LTCG -->
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <!-- /GL: LTCG -->
+      <!-- Runtime: Multi-threaded (static CRT) for no DLL dependency -->
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <!-- Buffer Security Check off (minor throughput gain) -->
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <!-- No debug info in release -->
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <!-- /OPT:ICF -->
+      <OptimizeReferences>true</OptimizeReferences>
+      <!-- /OPT:REF -->
+      <!-- Link Time Code Generation -->
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- ======================================================= -->
+  <!-- Source files                                            -->
+  <!-- ======================================================= -->
+  <ItemGroup>
+    <ClCompile Include="PrimeSieve.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
