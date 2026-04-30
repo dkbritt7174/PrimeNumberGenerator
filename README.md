@@ -1,6 +1,6 @@
 # PrimeSieve — Primes up to 1 Billion
 Java, Python, Nuitka and Visual Studio
-High-performance C++ console application that finds all primes up to **1,000,000,000**
+High-performance console applications that finds all primes up to **1,000,000,000**
 using a heavily optimized Sieve of Eratosthenes.
 
 ## Features
