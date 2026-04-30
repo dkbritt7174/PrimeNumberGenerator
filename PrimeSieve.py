@@ -28,7 +28,8 @@ import time
 import numpy as np
 
 LIMIT = 1_000_000_000
-SEGMENT_HALF = 1 << 20           # 1,048,576 odd numbers per segment (~2.1M ints, ~1 MiB bool)
+# 1,048,576 odd numbers per segment (~2.1M ints, ~1 MiB bool)
+SEGMENT_HALF = 1 << 20
 WRITE_BUFFER_BYTES = 4 << 20     # 4 MiB stdio buffer
 
 
@@ -68,13 +69,14 @@ def base_primes(limit: int) -> np.ndarray:
     """Standard odds-only sieve returning primes <= limit as int64 array."""
     if limit < 2:
         return np.array([], dtype=np.int64)
-    n_odd = (limit - 1) // 2 + 1                 # indices 0..n_odd-1 -> 1,3,5,...
+    # indices 0..n_odd-1 -> 1,3,5,...
+    n_odd = (limit - 1) // 2 + 1
     sieve = np.ones(n_odd, dtype=bool)
     sieve[0] = False                             # 1 is not prime
     for i in range(1, int(math.isqrt(limit)) // 2 + 1):
         if sieve[i]:
             p = 2 * i + 1
-            sieve[(p * p - 1) // 2 :: p] = False
+            sieve[(p * p - 1) // 2:: p] = False
     odd_primes = (np.nonzero(sieve)[0] * 2 + 1).astype(np.int64)
     return np.concatenate(([2], odd_primes))
 
@@ -96,7 +98,8 @@ def sieve_and_write(path: str, limit: int, primes: np.ndarray, timer: Timer) -> 
     next_idx = ((odd_primes * odd_primes - 1) // 2).astype(np.int64)
 
     seg = np.empty(SEGMENT_HALF, dtype=bool)
-    n_total_odds = (limit - 1) // 2 + 1          # total odd integers in [1, limit]
+    # total odd integers in [1, limit]
+    n_total_odds = (limit - 1) // 2 + 1
     seg_count = (n_total_odds + SEGMENT_HALF - 1) // SEGMENT_HALF
 
     count = 0
@@ -110,7 +113,8 @@ def sieve_and_write(path: str, limit: int, primes: np.ndarray, timer: Timer) -> 
             count += 1
 
             for s in range(seg_count):
-                seg_lo = s * SEGMENT_HALF                       # index of first odd in seg (odd value = 2*seg_lo + 1)
+                # index of first odd in seg (odd value = 2*seg_lo + 1)
+                seg_lo = s * SEGMENT_HALF
                 seg_hi = min(seg_lo + SEGMENT_HALF, n_total_odds)
                 width = seg_hi - seg_lo
                 seg[:width] = True
@@ -164,8 +168,10 @@ def main() -> None:
     t_start = time.perf_counter()
 
     sqrt_limit = int(math.isqrt(LIMIT))
-    print(f"Sieving primes up to {LIMIT:,} (sqrt = {sqrt_limit:,})", file=sys.stderr)
-    print(f"Segment size: {SEGMENT_HALF:,} odd entries (~{SEGMENT_HALF // 1024} KiB)", file=sys.stderr)
+    print(f"Sieving primes up to {
+          LIMIT:,} (sqrt = {sqrt_limit:,})", file=sys.stderr)
+    print(f"Segment size: {SEGMENT_HALF:,} odd entries (~{
+          SEGMENT_HALF // 1024} KiB)", file=sys.stderr)
 
     with timer.section("base primes (<= sqrt N)"):
         primes = base_primes(sqrt_limit)

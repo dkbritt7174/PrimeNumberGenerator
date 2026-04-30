@@ -1,0 +1,5 @@
+﻿cl : command line  warning D9025: overriding '/sdl' with '/GS-'
+  PrimeSieve.cpp
+  Generating code
+  Finished generating code
+  PrimeSieve.vcxproj -> A:\SourceCode\PrimeNumberGenerator\PrimeNumberGenerator\PrimeSieveVSSolution\x64\Release\PrimeSieve.exe
